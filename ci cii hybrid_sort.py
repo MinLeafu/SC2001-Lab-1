@@ -101,7 +101,6 @@ def generate_data(n, x, seed=None):
     ]
 
 if __name__ == "__main__":
-  if __name__ == "__main__":
     # c(ii): Fix n and change threshold S
     fixed_n = 1_000_000
     x = 10_000_000
