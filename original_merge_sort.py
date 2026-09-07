@@ -1,40 +1,52 @@
-def original_merge_sort(arr, start, end):
-    if start >= end:
-        return
+def pure_merge_sort(arr, temp, left, right):
+    if left >= right:
+        return 0
 
-    mid = start + (end - start) // 2
-    original_merge_sort(arr, start, mid)
-    original_merge_sort(arr, mid + 1, end)
-    merge(arr, start, mid, end)
-
-
-def merge(arr, start, mid, end):
+    mid = (left + right) // 2
     comparisons = 0
 
-    temp = [0] * (end - start + 1)
-    idx = 0
-    l, r = start, mid + 1
+    comparisons += pure_merge_sort(arr, temp, left, mid)
+    comparisons += pure_merge_sort(arr, temp, mid + 1, right)
+    comparisons += merge(arr, temp, left, mid, right)
 
-    while l <= mid and r <= end:
+    return comparisons
+
+
+def merge(arr, temp, left, mid, right):
+    comparisons = 0
+
+    i = left
+    j = mid + 1
+    k = left
+
+    while i <= mid and j <= right:
         comparisons += 1
 
-        if arr[l] <= arr[r]:
-            temp[idx] = arr[l]
-            l += 1
+        if arr[i] <= arr[j]:
+            temp[k] = arr[i]
+            i += 1
         else:
-            temp[idx] = arr[r]
-            r += 1
-        idx += 1
+            temp[k] = arr[j]
+            j += 1
 
-    while l <= mid:
-        temp[idx] = arr[l]
-        l += 1
-        idx += 1
+        k += 1
 
-    while r <= end:
-        temp[idx] = arr[r]
-        r += 1
-        idx += 1
+    while i <= mid:
+        temp[k] = arr[i]
+        i += 1
+        k += 1
 
-    for i in range(start, end + 1):
-        arr[i] = temp[i - start]
+    while j <= right:
+        temp[k] = arr[j]
+        j += 1
+        k += 1
+
+    for k in range(left, right + 1):
+        arr[k] = temp[k]
+
+    return comparisons
+
+
+def original_merge_sort(arr):
+    temp = [0] * len(arr)
+    return pure_merge_sort(arr, temp, 0, len(arr) - 1)
