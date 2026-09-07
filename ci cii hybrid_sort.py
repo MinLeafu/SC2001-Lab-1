@@ -101,9 +101,33 @@ def generate_data(n, x, seed=None):
     ]
 
 if __name__ == "__main__":
+    # c(i): Fix S and change size n
+    fixed_S = 10
+    x = 10_000_000
+
+    input_sizes = [
+        1_000,
+        10_000,
+        100_000,
+        1_000_000,
+        10_000_000
+    ]
+
+    print("Part c(i): Fixed S, changing n")
+    print(f"Fixed S = {fixed_S}")
+    print("n,comparisons")
+
+    for n in input_sizes:
+        data = generate_data(n, x, seed=42 + n)
+
+        comparisons = hybrid_sort(data, fixed_S)
+
+        print(f"{n},{comparisons}")
+
+        del data
+
     # c(ii): Fix n and change threshold S
     fixed_n = 1_000_000
-    x = 10_000_000
 
     S_values = [
         1,
