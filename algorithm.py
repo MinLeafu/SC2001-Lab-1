@@ -203,7 +203,7 @@ if __name__ == "__main__":
 
     # d): Original vs hybrid merge sort
     fixed_n = 10_000_000
-    fixed_s = 8
+    fixed_S = 8
     original_data = generate_data(fixed_n, x, seed=42)
 
     data = original_data.copy()
