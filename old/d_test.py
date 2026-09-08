@@ -124,86 +124,11 @@ def generate_data(n, x, seed=None):
 
 
 if __name__ == "__main__":
-    # c(i): Fix S and change size n
-    fixed_S = 10
-    x = 10_000_000
-
-    input_sizes = [
-        1_000,
-        10_000,
-        100_000,
-        1_000_000,
-        10_000_000
-    ]
-
-    print("Part c(i): Fixed S, changing n")
-    print(f"Fixed S = {fixed_S}")
-    print("n,comparisons")
-
-    for n in input_sizes:
-        data = generate_data(n, x, seed=42 + n)
-
-        # print(f"Dataset size: {len(data):,}")
-        # print(f"First 10 values: {data[:10]}")
-        # print(f"Minimum value: {min(data):,}")
-        # print(f"Maximum value: {max(data):,}")
-        # print()
-
-        comparisons = hybrid_sort(data, fixed_S)
-
-        print(f"{n},{comparisons}")
-
-        del data
-
-    print()
-
-    # c(ii): Fix n and change threshold S
-    fixed_n = 1_000_000
-
-    S_values = [
-        1,
-        2,
-        4,
-        8,
-        16,
-        32,
-        64,
-        128
-    ]
-
-    # Generate one original dataset
-    original_data = generate_data(fixed_n, x, seed=42)
-
-    print("Part c(ii): Fixed n, changing S")
-    print(f"Fixed n = {fixed_n}")
-    print("S,comparisons")
-
-    for S in S_values:
-        # Use the same original dataset for every S
-        data = original_data.copy()
-
-        comparisons = hybrid_sort(data, S)
-
-        print(f"{S},{comparisons}")
-
-        del data
-
-    # c(iii): Optimal value for S
-    for n in input_sizes:
-        original_data = generate_data(n, x, seed=42 + n)
-
-        for S in S_values:
-            data = original_data.copy()
-
-            start = time.process_time()
-            hybrid_sort(data, S)
-            end = time.process_time()
-
-            print(f"n={n}, S={S}: {end - start}s")
-
     # d): Original vs hybrid merge sort
     fixed_n = 10_000_000
-    fixed_s = 8
+    fixed_S = 8
+    x = 10_000_000
+
     original_data = generate_data(fixed_n, x, seed=42)
 
     data = original_data.copy()
