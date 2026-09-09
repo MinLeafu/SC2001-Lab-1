@@ -2,12 +2,18 @@ import time
 import random
 
 def insertion_sort(arr, left, right):
+    # Sort arr[left:right + 1] using insertion sort
+    # Return number of key comparisons
+
     comparisons = 0
 
+    # Treat arr[left] as initially sorted
+    # Insert each remaining element into correct position
     for i in range(left + 1, right + 1):
         key = arr[i]
         j = i - 1
 
+        # Shift elements larger than key to right
         while j >= left:
             comparisons += 1
 
@@ -17,18 +23,28 @@ def insertion_sort(arr, left, right):
             else:
                 break
 
+        # Insert key into correct position
         arr[j + 1] = key
 
     return comparisons
 
 
 def merge(arr, temp, left, mid, right):
+    # Merge 2 sorted subarrays:
+    # arr[left:mid + 1] and arr[mid + 1:right + 1]
+    # Return number of key comparisons
+
     comparisons = 0
+
+    # i points to left subarray
+    # j points to right subarray
+    # k points to temp subarray
 
     i = left
     j = mid + 1
     k = left
 
+    # Compare elements from both halves, copy the smaller one
     while i <= mid and j <= right:
         comparisons += 1
 
@@ -41,16 +57,19 @@ def merge(arr, temp, left, mid, right):
 
         k += 1
 
+    # Copy any remaining elements from left half
     while i <= mid:
         temp[k] = arr[i]
         i += 1
         k += 1
 
+    # Copy any remaining elements from right half
     while j <= right:
         temp[k] = arr[j]
         j += 1
         k += 1
 
+    # Copy merged result back into original array
     for k in range(left, right + 1):
         arr[k] = temp[k]
 
@@ -58,14 +77,20 @@ def merge(arr, temp, left, mid, right):
 
 
 def hybrid_merge_sort(arr, temp, left, right, S):
+    # Recursive hybrid merge sort
+    # Uses insertion sort when current subarray size <= S
+
+    # Base case: subarray with 0 or 1 element already sorted
     if left >= right:
         return 0
 
     size = right - left + 1
 
+    # Switch to insertion sort for subarrays with size <= S
     if size <= S:
         return insertion_sort(arr, left, right)
 
+    # Otherwise continue with standard merge sort partitioning
     mid = (left + right) // 2
     comparisons = 0
 
@@ -77,9 +102,15 @@ def hybrid_merge_sort(arr, temp, left, right, S):
 
 
 def hybrid_sort(arr, S):
+    # Wrapper function for hybrid merge sort
+    # Allocate temp array once
+    # Return number of key comparisons
+
     if S < 1:
         raise ValueError("S must be at least 1")
 
+    # Reuse 1 temp array for all merge operations
+    # Reduces allocation overhead
     temp = [0] * len(arr)
 
     comparisons = hybrid_merge_sort(
@@ -94,12 +125,17 @@ def hybrid_sort(arr, S):
 
 
 def pure_merge_sort(arr, temp, left, right):
+    # Standard recursive merge sort
+    # Return number of key comparisons
+
+    # Base case: subarray with 0 or 1 element already sorted
     if left >= right:
         return 0
 
     mid = (left + right) // 2
     comparisons = 0
 
+    # Sort both halves recursively then merge
     comparisons += pure_merge_sort(arr, temp, left, mid)
     comparisons += pure_merge_sort(arr, temp, mid + 1, right)
     comparisons += merge(arr, temp, left, mid, right)
@@ -108,6 +144,7 @@ def pure_merge_sort(arr, temp, left, right):
 
 
 def original_merge_sort(arr):
+    # Wrapper function for standard merge sort
     # Basically hybrid merge sort with S equal to 1
 
     temp = [0] * len(arr)
@@ -115,6 +152,9 @@ def original_merge_sort(arr):
 
 
 def generate_data(n, x, seed=None):
+    # Generate n random integers from 1 to x
+    # Seed can be provided to reproduce same dataset
+
     random_generator = random.Random(seed)
 
     return [
@@ -141,8 +181,10 @@ if __name__ == "__main__":
     print("n,comparisons")
 
     for n in input_sizes:
+        # Use deterministic seed to reproduce dataset
         data = generate_data(n, x, seed=42 + n)
 
+        # Uncomment these lines to inspect datasets
         # print(f"Dataset size: {len(data):,}")
         # print(f"First 10 values: {data[:10]}")
         # print(f"Minimum value: {min(data):,}")
@@ -153,6 +195,7 @@ if __name__ == "__main__":
 
         print(f"{n},{comparisons}")
 
+        # Release large array before next generation
         del data
 
     print()
@@ -206,6 +249,7 @@ if __name__ == "__main__":
     fixed_S = 8
     original_data = generate_data(fixed_n, x, seed=42)
 
+    # Original merge sort
     data = original_data.copy()
 
     start = time.process_time()
@@ -214,6 +258,7 @@ if __name__ == "__main__":
 
     del data
 
+    # Hybrid merge sort
     data = original_data.copy()
 
     start = time.process_time()
@@ -222,6 +267,7 @@ if __name__ == "__main__":
 
     del data
 
+    # Display comparison results
     print("Original merge sort:")
     print(f"Comparisons: {original_comparisons}")
     print(f"CPU time: {original_time:.6f}s")
